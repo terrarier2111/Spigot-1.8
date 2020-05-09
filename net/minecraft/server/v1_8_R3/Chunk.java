@@ -533,7 +533,10 @@ public class Chunk {
             chunksection.setType(i, j & 15, k, iblockdata);
             if (block1 != block) {
                 if (!this.world.isClientSide) {
-                    block1.remove(this.world, blockposition, iblockdata1);
+                   // block1.remove(this.world, blockposition, iblockdata1);
+                	if(Thread.currentThread() != MinecraftServer.getServer().primaryThread) {
+                		return null;
+                	}
                 } else if (block1 instanceof IContainer) {
                     this.world.t(blockposition);
                 }
@@ -572,7 +575,10 @@ public class Chunk {
 
                 // CraftBukkit - Don't place while processing the BlockPlaceEvent, unless it's a BlockContainer. Prevents blocks such as TNT from activating when cancelled.
                 if (!this.world.isClientSide && block1 != block  && (!this.world.captureBlockStates || block instanceof BlockContainer)) {
-                    block.onPlace(this.world, blockposition, iblockdata);
+                   // block.onPlace(this.world, blockposition, iblockdata);
+                	if(Thread.currentThread() != MinecraftServer.getServer().primaryThread) {
+                		return null;
+                	}
                 }
 
                 if (block instanceof IContainer) {
